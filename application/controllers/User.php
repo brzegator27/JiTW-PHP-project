@@ -1,8 +1,9 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+class User {
+    public function asd($param1, $param2, $param3) {
+        echo $param1;
+        echo $param2;
+        echo $param3;
+    }
+}
