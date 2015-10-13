@@ -10,4 +10,7 @@ class Config {
     const
         URL_BASE = "/jitw-php-agh",
         INDEX_PAGE = 'index.php';
+    
+    const
+        FAKEDATABASE_PATH = "fakeDatabase";
 }
