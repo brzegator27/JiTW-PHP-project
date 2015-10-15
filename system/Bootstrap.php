@@ -13,6 +13,7 @@ class Bootstrap {
         $this->runController($controllerName, $controllerMethodName, $methodAruments);
     }
     
+    // Nazwa getUrlParams jest dwuznaczna - sugeruje pobieranie argumentów przesyłanych przez POST i GET
     private function getUrlParams() {
         $mainRawUrl = filter_var($_SERVER['PHP_SELF'], FILTER_SANITIZE_URL);
         $urlBaseAndIndex = Config::URL_BASE . '/' . Config::INDEX_PAGE;
