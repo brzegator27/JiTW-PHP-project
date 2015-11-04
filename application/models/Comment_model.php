@@ -1,8 +1,28 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+require_once '/../core/Basic_model.php';
+class Comment_model extends Basic_model {
+    
+    public function manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId) {
+        $blogNameProper = $this->getInternalBlogName($blogName);
+        $commentDirPath = $blogNameProper . '/' . $entryId . '.k';
+        $commentDirExist = $this->checkIfFileExistsFD('', $commentDirPath);
+        
+        if(!$commentDirExist) {
+            $this->addDirFD($blogNameProper, $entryId . '.k');
+        }
+        
+        $newCommentNumber = $this->getFilesInDirCount($commentDirPath) + 1;
+        $this->addEmptyFileFD($commentDirPath, $newCommentNumber);
+        
+        $commentDate = gmdate('Y-m-d h:i:s \G\M\T');
+        $this->saveDataToFileFD($commentDirPath, $newCommentNumber, array($commentType, $commentDate, $nickname, $content));
+    }
+    
+    private function getFilesInDirCount($dirPath) {
+        $dirPathFD = $this->fakeDatabaseDir . '/' . $dirPath;
+        $filesystemIterator = new FilesystemIterator($dirPathFD, FilesystemIterator::SKIP_DOTS);
+        return iterator_count($filesystemIterator);
+    }
+}

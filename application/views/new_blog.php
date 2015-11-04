@@ -1,8 +1,7 @@
-<?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+<form method="post" action="<?= Config::URL_BASE . '/blog/add_blog'; ?>">
+    Nazwa bloga: <input type="text" name="blog_name" /><br/>
+    Nazwa użytkownika: <input type="text" name="user_name" /><br/>
+    Hasło: <input type="password" name="password" /><br/>
+    Opis bloga: <textarea name="blog_description" cols="40" rows="5"></textarea><br/>
+    <input type="submit" name="submit" value="Wyślij" />
+</form>

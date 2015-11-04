@@ -46,7 +46,7 @@ class Bootstrap {
     
     private function manageControllerMethod($controllerMethodName, $methodAruments = array()) {
         if($controllerMethodName === '') {
-            $this->controllerObj = $this->controllerObj->newInstanceArgs($methodAruments);
+//            If we call controller in URL cant't be passed arguments because one of them will be considered as method name
             return;
         }
         

@@ -7,6 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Basic_model {
     
+    protected $fakeDatabaseDir = 'fakeDatabase';
+    
     public function addDirFD($folderDirPath, $folderName) {
         if($this->checkIfFileExistsFD($folderDirPath, $folderName)) {
             return false;
@@ -38,7 +40,8 @@ class Basic_model {
     }
     
     protected function prepareTextToSave($text) {
-        return trim(preg_replace('/\s+/', ' ', $text));
+        return $text;
+//        return trim(preg_replace('/\s+/', ' ', $text));
     }
 
     public function clearFileFD($fileDirPath, $fileName) {
@@ -54,7 +57,7 @@ class Basic_model {
         $fileData = array();
         
         while(!feof($file)) {
-          $fileData[] = fgets($file);
+          $fileData[] = rtrim(fgets($file));
         }
         fclose($file);
         
@@ -62,12 +65,16 @@ class Basic_model {
     }
     
     protected function generatePath($fileDirPath, $fileName) {
-        return __DIR__ . '/../../' . Config::FAKEDATABASE_PATH .  $fileDirPath . '/' . $fileName;
+        return __DIR__ . '/../../' . Config::FAKEDATABASE_PATH . '/' .  $fileDirPath . '/' . $fileName;
     }
     
     protected function checkIfFileExistsFD($fileDirPath, $fileName) {
         $fileFullPath = $this->generatePath($fileDirPath, $fileName);
         return file_exists($fileFullPath);
+    }
+    
+    public function getInternalBlogName($blogName) {
+        return str_replace(' ', '-', $blogName);
     }
 }
 
