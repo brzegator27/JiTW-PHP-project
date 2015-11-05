@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once '/../core/Basic_controller.php';
+require_once 'Blog.php';
 class Comment extends Basic_controller {
     
     public function __construct() {
@@ -10,18 +11,29 @@ class Comment extends Basic_controller {
     }
     
     public function add_comment() {
+        $blogNameGet = $this->getGetData('blog_name');
+        $entryIdGet = $this->getGetData('entry_id');
+        
         $blogName = $this->getPostData('blog_name');
         $entryId = $this->getPostData('entry_id');
         $commentType = $this->getPostData('type');
         $nickname = $this->getPostData('nickname');
         $content = $this->getPostData('content');
-
-        if($commentType && $nickname && $content && $blogName && $entryId) {
-            $this->model->manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId);
-            $this->loadView('new_comment');
-        }
         
-        $this->loadView('new_comment');
+        if($commentType !== '' && $nickname && $content && $blogName && $entryId) {
+            $this->model->manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId);
+            $blog = new Blog();
+            $blog->displayWholeBlog($blogName);
+            return;
+        }
+
+        if($blogNameGet && $entryIdGet) {
+            $viewData = array('blog_name' => $blogNameGet, 'entry_id' => $entryIdGet);
+            $this->loadView('new_comment', $viewData);
+            return; 
+       }
+        
+        $this->displayError404();
     }
 
 }

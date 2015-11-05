@@ -40,8 +40,7 @@ class Bootstrap {
             exit('No controller specified!');
         }
         
-        $properControllerName = ucfirst($controllerName);
-        $this->manageController($properControllerName, $controllerMethodName, $methodAruments);
+        $this->manageController($controllerName, $controllerMethodName, $methodAruments);
     }
     
     private function manageControllerMethod($controllerMethodName, $methodAruments = array()) {
@@ -57,11 +56,19 @@ class Bootstrap {
         call_user_func_array(array($this->controllerObj, $controllerMethodName), $methodAruments);
     }
     
-    private function manageController($properControllerName, $controllerMethodName = '', $methodAruments = array()) {
+    private function manageController($controllerName, $controllerMethodName = '', $methodAruments = array()) {
+        $properControllerName = ucfirst($controllerName);
         $controllerFileExists = $this->controllerFileExists($properControllerName);
         
         if(!$controllerFileExists) {
-            exit('Controller\'s file do not exist!');
+//            exit('Controller\'s file do not exist!');
+            $filePath = $controllerName;
+            $filePath .= $controllerMethodName !== '' ? '/' . $controllerMethodName : '';
+            foreach($methodAruments as $urlElement) {
+                $filePath .= '/' . $urlElement;
+            }
+            $this->manageFileDownload($filePath);
+            return;
         }
         
         $controllerClassExist = $this->manageControllerClass($properControllerName);
@@ -97,4 +104,38 @@ class Bootstrap {
         return Config::APPLICATION_PATH . '/' . Config::CONTROLLERS_PATH . '/' . $properControllerName . '.php';
     }
     
+    private function manageFileDownload($filePath) {
+        echo $filePath;br();
+        $relativeFilePath = __DIR__ . '/../' . $filePath;
+        echo $relativeFilePath;
+        br();
+        if(!file_exists($relativeFilePath)) {
+            exit('Error!');
+        }
+        
+        $this->sendFile($relativeFilePath);
+    }
+    
+    private function sendFile($relativeFilePath) {
+//        echo 'sending file';
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        header('Content-Type: ' . finfo_file($fileInfo, $relativeFilePath));
+        finfo_close($fileInfo);
+
+        //Use Content-Disposition: attachment to specify the filename
+        header('Content-Disposition: attachment; filename=' . basename($relativeFilePath));
+
+        //No cache
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+
+        //Define file size
+        header('Content-Length: ' . filesize($relativeFilePath));
+
+        ob_clean();
+        flush();
+        readfile($relativeFilePath);
+        exit;
+    }
 }

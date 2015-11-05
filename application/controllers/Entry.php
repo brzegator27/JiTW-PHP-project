@@ -9,19 +9,29 @@ class Entry extends Basic_controller {
         $this->loadModel('Entry');
     }
     
-//    public function add_entry() {
-//        $blogName = $this->getPostData('blog_name');
-//        $entryId = $this->getPostData('entry_id');
-//        $commentType = $this->getPostData('type');
-//        $nickname = $this->getPostData('nickname');
-//        $content = $this->getPostData('content');
-//
-//        if($commentType && $nickname && $content && $blogName && $entryId) {
-//            $this->model->manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId);
-//            $this->loadView('new_comment');
-//        }
-//        
-//        $this->loadView('new_comment');
-//    }
+    public function add_entry() {
+        $entryTitle = $this->getPostData('entry_title');
+        $entry = $this->getPostData('entry');
+        $userName = $this->getPostData('user_name');
+        $password = $this->getPostData('password');
+        $date = $this->getPostData('date');
 
+        if($entryTitle && $entry && $userName && $password) {
+            return $this->addNewEntry($entryTitle, $entry, $userName, $password, $date);
+        }
+        
+        $this->loadView('new_entry');
+    }
+    
+    private function addNewEntry($entryTitle, $entry, $userName, $password, $date) {
+        $blogName = $this->model->getUserBlogProperName($userName, $password);
+        if(!$blogName) {
+            $this->loadView('blog_added', array('message' => 'Podana nazwa użytkownika, lub hasło są niepoprawne.'));
+            return;
+        }
+        
+        $this->model->manageNewEntryData($blogName, $entryTitle, $entry, $date);
+        $this->loadView('entry_added');
+    }
+    
 }

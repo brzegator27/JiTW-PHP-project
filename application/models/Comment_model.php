@@ -13,7 +13,7 @@ class Comment_model extends Basic_model {
             $this->addDirFD($blogNameProper, $entryId . '.k');
         }
         
-        $newCommentNumber = $this->getFilesInDirCount($commentDirPath) + 1;
+        $newCommentNumber = $this->getFilesInDirCount($commentDirPath);
         $this->addEmptyFileFD($commentDirPath, $newCommentNumber);
         
         $commentDate = gmdate('Y-m-d h:i:s \G\M\T');

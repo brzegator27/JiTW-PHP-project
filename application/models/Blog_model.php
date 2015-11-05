@@ -12,6 +12,7 @@ class Blog_model extends Basic_model {
         
         $properBlogName = $this->getInternalBlogName($blogName);
         
+        $blogData['blog_name'] = $blogName;
         $blogData['description'] = $this->getBlogDescription($properBlogName);
         $blogData['entries'] = $this->getBlogEntries($properBlogName);
         
@@ -28,12 +29,14 @@ class Blog_model extends Basic_model {
             $blogEntryIdWithPath = explode('/', $blogEntryIdRough);
             $blogEntryId = $blogEntryIdWithPath[count($blogEntryIdWithPath) - 1];
             $blogEntryComments = $this->getEntryComments($properBlogName, $blogEntryId);
+            $blogEntryFiles = $this->getEntryFilesPaths($properBlogName, $blogEntryId);
             $blogEntryTitleAndContent = $this->getEntryTitleAndContent($properBlogName, $blogEntryId);
             
             $entries[$blogEntryId] = array(
                 'title' => $blogEntryTitleAndContent['title'],
                 'content' => $blogEntryTitleAndContent['content'],
-                'comments' => $blogEntryComments
+                'comments' => $blogEntryComments,
+                'files' => $blogEntryFiles
             );
         }
         
@@ -41,8 +44,34 @@ class Blog_model extends Basic_model {
     }
     
     public function getEntryComments($properBlogName, $entryId) {
+        $comments = array();
         
-        return array();
+        $entryCommentsFilesRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/' . $entryId . '.k/*';
+        $entryCommentsFilesRough = glob($entryCommentsFilesRegExp);
+        
+        for($i = 0; $i < count($entryCommentsFilesRough); $i++) {
+            $commentData = $this->readDataFromFileFD($properBlogName . '/' . $entryId . '.k', $i);
+            
+            $comment = array();
+            $comment['type'] = $commentData[0];
+            $comment['date'] = $commentData[1];
+            $comment['content'] = '';
+            
+            for($j = 2; $j < count($commentData); $j++) {
+                $comment['content'] .= $commentData[$j] . '<br/>';
+            }
+            
+            $comments[] = $comment;
+        }
+        
+        return $comments;
+    }
+    
+    public function getEntryFilesPaths($properBlogName, $entryId) {
+        $entryFilesRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/' . $entryId . '?.*';
+        $entryFilesPaths = glob($entryFilesRegExp);
+        
+        return $entryFilesPaths;
     }
     
     public function getEntryTitleAndContent($properBlogName, $entryId) {
@@ -52,7 +81,7 @@ class Blog_model extends Basic_model {
         $entryTitle = $basicEntryData[0];
         $entryContent = '';
         for($i = 1; $i < count($basicEntryData); $i++) {
-            $entryContent .= $basicEntryData[$i] . "\n";
+            $entryContent .= $basicEntryData[$i] . "<br/>";
         }
         
         $blogEntryTitleAndContent['title'] = $entryTitle;
@@ -85,56 +114,4 @@ class Blog_model extends Basic_model {
         return $this->checkIfFileExistsFD('', $properBlogName);
     }
     
-    public function getUserBlogProperName($userName, $password) {
-        $blogsDirRough = glob($this->fakeDatabaseDir . '/*', GLOB_ONLYDIR);
-        
-        foreach($blogsDirRough as $blogDirRough) {
-            $blogPathDirs = explode('/', $blogDirRough);
-            $blogDir = $blogPathDirs[count($blogPathDirs) - 1];
-            
-            if($this->checkSingleBlogUserData($blogDir, $userName, $password)) {
-                return $blogDir;
-            }
-        }
-    }
-    
-    protected function checkSingleBlogUserData($properBlogName, $userName, $password) {
-        if(!$this->checkIfFileExistsFD($properBlogName, 'info')) {
-            return false;
-        }
-        
-        $blogUserData = $this->readDataFromFileFD($properBlogName, 'info');
-        $blogDataUserName = $blogUserData[0];
-        $blogDataPasswordMD5 = $blogUserData[1];
-        
-        $passwordMD5 = md5($password);
-        if($userName === $blogDataUserName && $passwordMD5 === $blogDataPasswordMD5) {
-            return true;
-        }
-        return false;
-    }
-    
-    public function manageNewEntryData($properBlogName, $entryTitle, $entry, $date) {
-        $seconds = '12';
-        $basicNewEntryDirName = $date . $seconds;
-        $uniqunessNumber = $this->getNewEntryUniqueNumber($properBlogName, $basicNewEntryDirName);
-        $newEntryDirFullName = $basicNewEntryDirName . $uniqunessNumber;
-        
-        $this->addEmptyFileFD($properBlogName, $newEntryDirFullName);
-        $this->saveDataToFileFD($properBlogName, $newEntryDirFullName, array($entryTitle, $entry));
-    }
-    
-    protected function getNewEntryUniqueNumber($properBlogName, $basicNewEntryDirName) {
-        $basicNewEntryDirNameRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/' . $basicNewEntryDirName . '??';
-        $blogSameTimeEntries = glob($basicNewEntryDirNameRegExp);
-        $sameTimeEntriesCount = count($blogSameTimeEntries);
-
-        if($sameTimeEntriesCount > 10) {
-            $uniqunessNumber = $sameTimeEntriesCount;
-        } else {
-            $uniqunessNumber = '0' . $sameTimeEntriesCount;
-        }
-        
-        return $uniqunessNumber;
-    }
 }

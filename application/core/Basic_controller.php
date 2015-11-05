@@ -5,11 +5,17 @@ class Basic_controller {
     
     protected $headerViewName = "header";
     protected $footViewName = "foot";
-    
+    protected  $error404ViewName = "error_404";
+
+
     protected $model = null;
 
     public function __construct() {
         
+    }
+    
+    public function displayError404() {
+        $this->loadView($this->error404ViewName);
     }
     
     protected function loadView($viewName, $viewData = array()) {
