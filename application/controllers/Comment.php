@@ -22,11 +22,12 @@ class Comment extends Basic_controller {
         
         if($commentType !== '' && $nickname && $content && $blogName && $entryId) {
             $this->model->manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId);
-            $blog = new Blog();
-            $blog->displayWholeBlog($blogName);
-            return;
+            
+            $newLocationUrl = 'http://' . $_SERVER['HTTP_HOST'] . Config::URL_BASE . '/' . 'blog?nazwa=' . rawurlencode($blogName);
+            header('Location: ' . $newLocationUrl);
+            die();
         }
-
+        
         if($blogNameGet && $entryIdGet) {
             $viewData = array('blog_name' => $blogNameGet, 'entry_id' => $entryIdGet);
             $this->loadView('new_comment', $viewData);

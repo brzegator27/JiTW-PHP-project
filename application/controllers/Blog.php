@@ -14,6 +14,12 @@ class Blog extends Basic_controller {
         }
     }
     
+    public function all_blogs() {
+        $blogsNames = $this->model->getAllBlogsNames();
+        
+        $this->loadView('blogs_list', $blogsNames);
+    }
+    
     public function displayWholeBlog($blogName) {
         $blogData = $this->model->getBlogData($blogName);
         $this->loadView('blog_page', $blogData);

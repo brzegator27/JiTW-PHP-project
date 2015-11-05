@@ -6,3 +6,6 @@ function br($i = 1) {
     }
 }
 
+function getConfig() {
+    return new Config();
+}

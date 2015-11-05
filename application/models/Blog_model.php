@@ -114,4 +114,18 @@ class Blog_model extends Basic_model {
         return $this->checkIfFileExistsFD('', $properBlogName);
     }
     
+    public function getAllBlogsNames() {
+        $blogsNames = array();
+        
+        $blogsDirsRegExp = $this->fakeDatabaseDir . '/*';
+        $blogsDirsPaths = glob($blogsDirsRegExp, GLOB_ONLYDIR);
+        
+        foreach($blogsDirsPaths as $blogDirPath) {
+            $blogDirPathElements = explode('/', $blogDirPath);
+            $blogsNames[] = $blogDirPathElements[count($blogDirPathElements) - 1];
+        }
+        
+        return $blogsNames;
+    }
+    
 }

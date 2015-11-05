@@ -105,19 +105,15 @@ class Bootstrap {
     }
     
     private function manageFileDownload($filePath) {
-        echo $filePath;br();
         $relativeFilePath = __DIR__ . '/../' . $filePath;
-        echo $relativeFilePath;
-        br();
         if(!file_exists($relativeFilePath)) {
-            exit('Error!');
+            exit('Error, file to download doesn\'t exist!');
         }
         
         $this->sendFile($relativeFilePath);
     }
     
     private function sendFile($relativeFilePath) {
-//        echo 'sending file';
         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
         header('Content-Type: ' . finfo_file($fileInfo, $relativeFilePath));
         finfo_close($fileInfo);

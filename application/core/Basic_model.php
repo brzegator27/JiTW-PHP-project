@@ -74,7 +74,8 @@ class Basic_model {
     }
     
     public function getInternalBlogName($blogName) {
-        return str_replace(' ', '-', $blogName);
+        return $blogName;
+//        return str_replace(' ', '-', $blogName);
     }
 }
 

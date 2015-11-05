@@ -1,10 +1,15 @@
-<h1>
-    Blog: <?= $viewData['blog_name'] ?>
-</h1>
+<?php 
+    if(count($viewData) === 0) {
+        echo 'Blog o podanej nazwie nie istnieje!';
+        return;
+    } 
+?>
 
-<a href="entry/add_entry">
-    Dodaj wpis.
-</a>
+<h1>
+    <!--<a href="blog?nazwa=<?= rawurlencode($viewData['blog_name']) ?>">-->
+        Blog: <?= $viewData['blog_name'] ?>
+    <!--</a>-->
+</h1>
 
 <?php foreach($viewData['entries'] as $entryId => $entry): ?>
 <div class="entry" style="background-color: grey; margin-bottom: 10px; padding: 10px;">
@@ -19,7 +24,7 @@
     Pliki do pobrania:<br/>
     <?php foreach($entry['files'] as $fileNumber => $filePath): ?>
         <a href="<?= $filePath ?>">
-            Plik <?= $fileNumber + 1 ?>
+            Plik <?= $fileNumber + 1 ?><br/>
         </a>
     <?php endforeach; ?>
     <br/><br/>

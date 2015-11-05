@@ -7,3 +7,4 @@
  <link rel="stylesheet" type="text/css" href="application/views/css/styles.css" title="Default"></link>
 </head>
     <body>
+        <?php require 'menu.php';
