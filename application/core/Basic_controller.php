@@ -5,7 +5,7 @@ class Basic_controller {
     
     protected $headerViewName = "header";
     protected $footViewName = "foot";
-    protected  $error404ViewName = "error_404";
+    protected $error404ViewName = "error_404";
 
 
     protected $model = null;

@@ -1,6 +1,9 @@
 Options +FollowSymLinks +ExecCGI
 
 <IfModule mod_rewrite.c>
+AddType text/css css .css
+
+
 # !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
 #  slashes.
 # If your page resides at

@@ -115,7 +115,19 @@ class Bootstrap {
     
     private function sendFile($relativeFilePath) {
         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-        header('Content-Type: ' . finfo_file($fileInfo, $relativeFilePath));
+        $fileExtension = pathinfo($relativeFilePath, PATHINFO_EXTENSION);
+        
+        $contentType = '';
+//        Bad hack for MIME types:
+        switch($fileExtension) {
+            case 'css':
+                $contentType = 'text/css';
+                break;
+            default:
+                $contentType = finfo_file($fileInfo, $relativeFilePath);
+        }
+        
+        header('Content-Type: ' . $contentType);
         finfo_close($fileInfo);
 
         //Use Content-Disposition: attachment to specify the filename
