@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once '/../core/Basic_controller.php';
+require_once realpath(__DIR__ . '/../core/Basic_controller.php');
 class Blog extends Basic_controller {
     
     public function __construct() {

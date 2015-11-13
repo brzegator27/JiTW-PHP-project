@@ -1,8 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once realpath(__DIR__ . '/../core/Basic_model.php');
-class Comment_model extends Basic_model {
+require_once '/../core/Basic_model.php';
+class Blog_live_comment_model extends Basic_model {
+    
+    public function newComment($author, $content) {
+        
+    }
+    
+    public function getComments() {
+        
+    }
+    
+    public function manageCommentsFile() {
+        
+    }
     
     public function manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId) {
         $blogNameProper = $this->getInternalBlogName($blogName);

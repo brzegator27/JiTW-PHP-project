@@ -35,7 +35,7 @@ class Basic_controller {
     
     protected function loadModel($basicModelName) {
         $fullModelName = $basicModelName . '_model';
-        require_once '/../models/' . $fullModelName . '.php';
+        require_once realpath(__DIR__ . '/../models/' . $fullModelName . '.php');
         $this->model = new $fullModelName();
     }
     

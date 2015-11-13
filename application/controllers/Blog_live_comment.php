@@ -2,12 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once realpath(__DIR__ . '/../core/Basic_controller.php');
-require_once 'Blog.php';
-class Comment extends Basic_controller {
+class Blog_live_comment extends Basic_controller {
     
     public function __construct() {
         parent::__construct();
-        $this->loadModel('Comment');
+        $this->loadModel('Blog_live_comment');
     }
     
     public function add_comment() {
