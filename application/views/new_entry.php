@@ -1,4 +1,4 @@
-<form method="post" action="<?= Config::URL_BASE . '/entry/add_entry'; ?>" name="entry_form" enctype="multipart/form-data">
+<form method="post" action="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE . '/entry/add_entry'; ?>" name="entry_form" enctype="multipart/form-data">
     Tytuł: <input type="text" name="entry_title" /><br/>
     Tekst: <textarea name="entry" cols="40" rows="5"></textarea><br/>
     Nazwa użytkownika: <input type="text" name="user_name" /><br/>
@@ -7,6 +7,7 @@
     Plik 2: <input type="file" name="file_2"><br/>
     Plik 3: <input type="file" name="file_3"><br/>
     <input type="hidden" name="date" /><br/>
+    <button type="reset" value="Wyczyść">Wyczyść</button><br/>
     <input type="submit" name="submit" value="Wyślij" />
 </form>
 

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once '/../core/Basic_model.php';
+require_once realpath(__DIR__ . '/../core/Basic_model.php');
 class Entry_model extends Basic_model {
     
     public function manageNewEntryData($blogName, $entryTitle, $entry, $date) {

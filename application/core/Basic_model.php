@@ -52,7 +52,7 @@ class Basic_model {
     
     public function readDataFromFileFD($fileDirPath, $fileName) {
         $filePath = $this->generatePath($fileDirPath, $fileName);
-        $file = fopen($filePath, "r") or die("Unable to open file!");
+        $file = fopen($filePath, "r") or die("Unable to open file with path: " . $filePath . " !");
         
         $fileData = array();
         

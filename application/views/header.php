@@ -4,7 +4,11 @@
 <head>
  <title>Jakiś tytuł strony tutaj jest :P</title>
  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
- <link rel="stylesheet" type="text/css" href="application/views/css/styles.css" title="Default"></link>
+ <link rel="stylesheet" 
+       type="text/css" 
+       href="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE ?>/application/views/css/styles.css" 
+       title="Default">
+ </link>
 </head>
     <body>
         <?php require 'menu.php';

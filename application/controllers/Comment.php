@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once '/../core/Basic_controller.php';
+require_once realpath(__DIR__ . '/../core/Basic_controller.php');
 require_once 'Blog.php';
 class Comment extends Basic_controller {
     
@@ -23,7 +23,7 @@ class Comment extends Basic_controller {
         if($commentType !== '' && $nickname && $content && $blogName && $entryId) {
             $this->model->manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId);
             
-            $newLocationUrl = 'http://' . $_SERVER['HTTP_HOST'] . Config::URL_BASE . '/' . 'blog?nazwa=' . rawurlencode($blogName);
+            $newLocationUrl = 'http://' . $_SERVER['HTTP_HOST'] . Config::URL_BASE . '/' . Config::INDEX_PAGE . '/' . 'blog?nazwa=' . rawurlencode($blogName);
             header('Location: ' . $newLocationUrl);
             die();
         }

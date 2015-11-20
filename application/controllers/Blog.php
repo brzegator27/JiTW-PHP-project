@@ -1,16 +1,21 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once '/../core/Basic_controller.php';
+require_once realpath(__DIR__ . '/../core/Basic_controller.php');
 class Blog extends Basic_controller {
     
-    public function __construct() {
+    public function __construct($controllerMethodWhichWillBeCalled) {
         parent::__construct();
         $this->loadModel('Blog');
         
         $blogToDisplayName = $this->getGetData('nazwa');
         if($blogToDisplayName) {
             $this->displayWholeBlog($blogToDisplayName);
+        } else {
+//            if (...) then we display list of blogs
+            if($controllerMethodWhichWillBeCalled === "") {
+                $this->all_blogs();
+            }
         }
     }
     
