@@ -5,7 +5,7 @@ class Config {
     private $fullBaseUrl;
     
     public function __construct() {
-        $this->fullBaseUrl = 'http://' . $_SERVER['HTTP_HOST'] . Config::URL_BASE . '/';
+        $this->fullBaseUrl = 'http://' . $_SERVER['HTTP_HOST'] . Config::URL_BASE . '/index.php/';
     }
     
     public function getFullBaseUrl() {

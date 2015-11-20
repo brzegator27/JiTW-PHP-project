@@ -6,15 +6,15 @@
  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
  <link rel="stylesheet" 
        type="text/css" 
-       href="<?= Config::URL_BASE ?>/application/views/css/styles.css" 
+       href="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE ?>/application/views/css/styles.css" 
        title="Default">
  </link>
  <link rel="alternate stylesheet" 
        type="text/css" 
-       href="<?= Config::URL_BASE ?>/application/views/css/alternative.css" 
+       href="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE ?>/application/views/css/alternative.css" 
        title="Other">
  </link>
- <script src="<?= Config::URL_BASE ?>/application/views/js/CSSManager.js"></script>
+ <script src="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE ?>/application/views/js/CSSManager.js"></script>
 </head>
     <body onload="inicializeCSSList()">
         <?php require 'menu.php';

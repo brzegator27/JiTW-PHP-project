@@ -11,6 +11,11 @@
     <!--</a>-->
 </h1>
 
+<div class="entry" style="background-color: grey; margin-bottom: 10px; padding: 10px;">
+    Opis blogu:<br/>
+    <?= $viewData['description'] ?>
+</div>
+
 <?php foreach($viewData['entries'] as $entryId => $entry): ?>
 <div class="entry" style="background-color: grey; margin-bottom: 10px; padding: 10px;">
     <h3>
@@ -46,6 +51,9 @@
 <?php
     function mapCommentTypeToString($commentType) {
         switch($commentType) {
+            case 2:
+            case '2':
+                return 'neutralny';
             case 1:
             case '1':
                 return 'pozytywny';
@@ -57,6 +65,9 @@
     
     function getCommentBackground($commentType) {
         switch($commentType) {
+            case 2:
+            case '2':
+                return 'grey';
             case 1:
             case '1':
                 return 'lawngreen';

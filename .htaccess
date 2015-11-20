@@ -1,29 +1,29 @@
-Options +FollowSymLinks +ExecCGI
-
-<IfModule mod_rewrite.c>
-AddType text/css css .css
-
-
-# !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
-#  slashes.
-# If your page resides at
-#  http://www.example.com/mypage/test1
-# then use
-# RewriteBase /mypage/test1/
-#RewriteEngine On
-
+#Options +FollowSymLinks +ExecCGI
+#
+#<IfModule mod_rewrite.c>
+#AddType text/css css .css
+#
+#
+## !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
+##  slashes.
+## If your page resides at
+##  http://www.example.com/mypage/test1
+## then use
+## RewriteBase /mypage/test1/
+##RewriteEngine On
+#
+##RewriteBase /jitw-php-agh/
+## RewriteCond %{REQUEST_URI}  !(\.png|\.jpg|\.gif|\.jpeg|\.bmp)$
+##RewriteRule ^(.*)$  index.php?path=%{REQUEST_URI} [L]
+##RewriteRule ^jitw-php-agh/?$ $1/jitw-php-agh$2 [R=301,L]
+#
+#RewriteEngine on
 #RewriteBase /jitw-php-agh/
-# RewriteCond %{REQUEST_URI}  !(\.png|\.jpg|\.gif|\.jpeg|\.bmp)$
-#RewriteRule ^(.*)$  index.php?path=%{REQUEST_URI} [L]
-#RewriteRule ^jitw-php-agh/?$ $1/jitw-php-agh$2 [R=301,L]
-
-RewriteEngine on
-RewriteBase /jitw-php-agh/
-RewriteCond $1 !^(index\.php|images|robots\.txt)
-RewriteRule ^(.*)$ /jitw-php-agh/index.php/$1 [L]
-</IfModule>
-
-Options +FollowSymLinks +ExecCGI
+#RewriteCond $1 !^(index\.php|images|robots\.txt)
+#RewriteRule ^(.*)$ /jitw-php-agh/index.php/$1 [L]
+#</IfModule>
+#
+#Options +FollowSymLinks +ExecCGI
 
 #<IfModule mod_rewrite.c>
 #AddType text/css css .css
@@ -42,4 +42,28 @@ Options +FollowSymLinks +ExecCGI
 #RewriteRule ^(.*)$  index.php%{REQUEST_URI} [L]
 #RewriteRule ^/?$ $1/jitw-php-agh$2 [R=301,L]
 #
+#</IfModule>
+
+
+
+#Options +FollowSymLinks +ExecCGI
+#
+#<IfModule mod_rewrite.c>
+## !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
+##  slashes.
+## If your page resides at
+##  http://www.example.com/mypage/test1
+## then use
+## RewriteBase /mypage/test1/
+##RewriteEngine On
+#
+##RewriteBase /jitw-php-agh/
+## RewriteCond %{REQUEST_URI}  !(\.png|\.jpg|\.gif|\.jpeg|\.bmp)$
+##RewriteRule ^(.*)$  index.php?path=%{REQUEST_URI} [L]
+##RewriteRule ^jitw-php-agh/?$ $1/jitw-php-agh$2 [R=301,L]
+#
+#RewriteEngine on
+#RewriteBase /jitw-php-agh/
+#RewriteCond $1 !^(index\.php|images|robots\.txt)
+#RewriteRule ^(.*)$ /jitw-php-agh/index.php/$1 [L]
 #</IfModule>

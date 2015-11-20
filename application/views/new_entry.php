@@ -1,5 +1,5 @@
 <form method="post" 
-      action="<?= Config::URL_BASE . '/entry/add_entry'; ?>" 
+      action="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE . '/entry/add_entry'; ?>" 
       name="entry_form" 
       enctype="multipart/form-data" 
       id="entry-form"
@@ -20,6 +20,7 @@
     Plik 2: <input type="file" name="file_2"><br/>
     Plik 3: <input type="file" name="file_3"><br/>
     <input type="hidden" name="date" /><br/>
+    <button type="reset" value="Wyczyść">Wyczyść</button><br/>
     <input type="submit" name="submit" value="Wyślij" />
 </form>
 

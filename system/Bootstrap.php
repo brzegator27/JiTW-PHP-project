@@ -77,7 +77,8 @@ class Bootstrap {
             exit('Controller\'s class do not exist!');
         }
         
-        $this->controllerObj = new $properControllerName();
+//        This suppose to not work 100% correctly!
+        $this->controllerObj = new $properControllerName($controllerMethodName);
         
         $this->manageControllerMethod($controllerMethodName, $methodAruments);
     }
@@ -101,7 +102,7 @@ class Bootstrap {
     }
     
     private function getControllerPath($properControllerName = '') {
-        return Config::APPLICATION_PATH . '/' . Config::CONTROLLERS_PATH . '/' . $properControllerName . '.php';
+        return realpath(__DIR__ . '/' . '../' . Config::APPLICATION_PATH . '/' . Config::CONTROLLERS_PATH . '/' . $properControllerName . '.php');
     }
     
     private function manageFileDownload($filePath) {
@@ -118,7 +119,7 @@ class Bootstrap {
         $fileExtension = pathinfo($relativeFilePath, PATHINFO_EXTENSION);
         
         $contentType = '';
-//        Bad hack for MIME types:
+//        hack for MIME types:
         switch($fileExtension) {
             case 'css':
                 $contentType = 'text/css';
@@ -129,18 +130,14 @@ class Bootstrap {
         
         header('Content-Type: ' . $contentType);
         finfo_close($fileInfo);
-
         //Use Content-Disposition: attachment to specify the filename
         header('Content-Disposition: attachment; filename=' . basename($relativeFilePath));
-
         //No cache
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-
         //Define file size
         header('Content-Length: ' . filesize($relativeFilePath));
-
         ob_clean();
         flush();
         readfile($relativeFilePath);

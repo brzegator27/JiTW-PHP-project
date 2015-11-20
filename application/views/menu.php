@@ -10,7 +10,7 @@
         </a>
     </li>
     <li>
-        <a href="<?= getConfig()->getFullBaseUrl() ?>blog/all_blogs">
+        <a href="<?= getConfig()->getFullBaseUrl() ?>blog">
             Zobacz listę blogów
         </a>
     </li>

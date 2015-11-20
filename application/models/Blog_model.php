@@ -50,6 +50,12 @@ class Blog_model extends Basic_model {
         $entryCommentsFilesRough = glob($entryCommentsFilesRegExp);
         
         for($i = 0; $i < count($entryCommentsFilesRough); $i++) {
+//            Glob doesn't work the same way as in localhost, because of this and other reasons we chech if file exist:
+            $commentFileExist = $this->checkIfFileExistsFD($properBlogName . '/' . $entryId . '.k', $i);
+            if(!$commentFileExist) {
+                continue;
+            }
+            
             $commentData = $this->readDataFromFileFD($properBlogName . '/' . $entryId . '.k', $i);
             
             $comment = array();
