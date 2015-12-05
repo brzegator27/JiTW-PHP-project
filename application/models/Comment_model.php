@@ -45,7 +45,7 @@ class Comment_model extends Basic_model {
         return $this->checkIfFileExistsFD('', $properBlogName);
     }
     
-//    Bad practice, not proper model!!!
+//    Bad practice, method in not proper model!!!
     public function checkIfEntryExists($blogName, $entryId) {
         $properBlogName = $this->getInternalBlogName($blogName);
         return $this->checkIfFileExistsFD($properBlogName, $entryId);

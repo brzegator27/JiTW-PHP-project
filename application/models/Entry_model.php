@@ -73,14 +73,10 @@ class Entry_model extends Basic_model {
     }
     
     protected function manageNewEntryUploadedFiles($blogName, $entryId) {
-        $files = array();
-        $files[] = $this->getUploadedFileInfo('file_1');
-        $files[] = $this->getUploadedFileInfo('file_2');
-        $files[] = $this->getUploadedFileInfo('file_3');
-        
         $filesBasePath = $this->fakeDatabaseDir . '/' . $blogName . '/' . $entryId;
         
-        foreach($files as $fileNumber => $file) {
+        $fileNumber = 0;
+        foreach($_FILES as $file) {
             $uploadError = $file['error'];
             if($uploadError !== UPLOAD_ERR_OK) {
                 error_log('Upload not successful!');
@@ -98,6 +94,8 @@ class Entry_model extends Basic_model {
             $fileExtension = strrchr($fileName, '.' );
             $newEntryFileFullPath = $filesBasePath . $fileNumber . $fileExtension;
             move_uploaded_file($file['tmp_name'], $newEntryFileFullPath);
+            
+            $fileNumber++;
         }
         
         return true;

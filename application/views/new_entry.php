@@ -11,14 +11,15 @@
     Data wpisu: <input 
         type="text" 
         name="entry_date"
-        onkeyup="onDateFieldUpdate()"/><br/>
+        onkeyup="onDateFieldUpdate()"
+        onblur="onBlur()"/><br/>
     Godzina wpisu: <input 
         type="text" 
         name="entry_hour"
-        onkeyup="onHourFieldUpdate()"/><br/>
-    Plik 1: <input type="file" name="file_1"><br/>
-    Plik 2: <input type="file" name="file_2"><br/>
-    Plik 3: <input type="file" name="file_3"><br/>
+        onkeyup="onHourFieldUpdate()"
+        onblur="onBlur()"/><br/>
+    Plik : <input type="file" name="file_1"><br/>
+    <button type="button" onclick="newFileField(this)" id="new-file-button">Nowy plik</button><br/><br/>
     <input type="hidden" name="date" /><br/>
     <button type="reset" value="Wyczyść">Wyczyść</button><br/>
     <input type="submit" name="submit" value="Wyślij" />
@@ -26,7 +27,26 @@
 
 <script src="../application/views/js/js.js"></script>
 <script>
-    inicializeForm = function() {
+    var lastFileFieldIndex = 1;
+    
+    newFileField = function(button) {
+        var newFileFieldButtonId = 'new-file-button',
+                newFileFieldName = 'file_' + ++lastFileFieldIndex,
+                form = document.getElementById('entry-form'),
+                newFileFieldButton = document.getElementById(newFileFieldButtonId),
+                fileTextNode = document.createTextNode('Plik : '),
+                newFileField = document.createElement('input'),
+                linebreak = document.createElement('br');
+        
+        newFileField.setAttribute('type', 'file');
+        newFileField.setAttribute('name', newFileFieldName);
+        
+        form.insertBefore(fileTextNode, newFileFieldButton);
+        form.insertBefore(newFileField, newFileFieldButton);
+        form.insertBefore(linebreak, newFileFieldButton);
+    };
+    
+    setCurrentDate = function() {
         var form = document.getElementById('entry-form'),
                 entryDateField = form.entry_date,
                 entryHourField = form.entry_hour,
@@ -34,6 +54,10 @@
     
         entryDateField.value = dateData.year + '-' + dateData.month + '-' + dateData.day;
         entryHourField.value = dateData.hours + ':' + dateData.minutes;
+    };
+    
+    inicializeForm = function() {
+        setCurrentDate();
     };
     
     getDateData = function() {
@@ -70,9 +94,10 @@
                 isYearCorrect = entryDateFieldYearValue > 2000 && entryDateFieldYearValue < 9999,
                 isMonthCorrect = entryDateFieldMonthValue >= 1 && entryDateFieldMonthValue <= 12,
                 isDayCorrect = entryDateFieldDayValue >= 1 && entryDateFieldDayValue <= (isleapYear ? 28 : 29),
-                isFieldValueLenghtCorrect = entryDateFieldValueLenght === 10;
+                isFieldValueLenghtCorrect = entryDateFieldValueLenght === 10,
+                arePausesInPlace = entryDateFieldValue.substr(4, 1) === '-' && entryDateFieldValue.substr(7, 1) === '-';
 
-        return isYearCorrect && isMonthCorrect && isDayCorrect && isFieldValueLenghtCorrect;
+        return isYearCorrect && isMonthCorrect && isDayCorrect && isFieldValueLenghtCorrect && arePausesInPlace;
     };
     
     checkHourFieldCorrectness = function() {
@@ -84,9 +109,10 @@
                 entryHourFieldMinutesValue = parseInt(entryHourFieldValue.substr(3, 2)),
                 areHoursCorrect = entryHoureFieldHoursValue >= 0 && entryHoureFieldHoursValue <= 24,
                 areMinutesCorrect = entryHourFieldMinutesValue >= 0 && entryHourFieldMinutesValue <= 59,
-                isFieldValueLenghtCorrect = entryHourFieldValueLenght === 5;
+                isFieldValueLenghtCorrect = entryHourFieldValueLenght === 5,
+                isColonInPlace = entryHourFieldValue.substr(2, 1) === ':';
         
-        return areHoursCorrect && areMinutesCorrect && isFieldValueLenghtCorrect;
+        return areHoursCorrect && areMinutesCorrect && isFieldValueLenghtCorrect && isColonInPlace;
     };
     
     updateSubmitButton = function() {
@@ -122,6 +148,15 @@
         entryDateField.disabled = true;
         entryHourField.disabled = true;
         hiddenFullDateField.value = '' + entryDateFieldYearValue + entryDateFieldMonthValue + entryDateFieldDayValue + entryHourFieldHoursValue + entryHourFieldMinutesValue;
+    };
+    
+    onBlur = function() {
+        var isDateFieldCorrect = checkDateFieldCorrectness(),
+                isHourFieldCorrect = checkHourFieldCorrectness();
+        
+        if(!isDateFieldCorrect || !isHourFieldCorrect) {
+            setCurrentDate();
+        }
     };
     
     inicializeForm();

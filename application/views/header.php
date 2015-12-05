@@ -15,6 +15,7 @@
        title="Other">
  </link>
  <script src="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE ?>/application/views/js/CSSManager.js"></script>
+ <script src="<?= Config::URL_BASE . '/' . Config::INDEX_PAGE ?>/application/views/js/liveComment.js"></script>
 </head>
     <body onload="inicializeCSSList()">
         <?php require 'menu.php';
