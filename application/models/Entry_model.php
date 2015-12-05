@@ -5,15 +5,28 @@ require_once realpath(__DIR__ . '/../core/Basic_model.php');
 class Entry_model extends Basic_model {
     
     public function manageNewEntryData($blogName, $entryTitle, $entry, $date) {
+        if(!$this->checkIfBlogExist($blogName)) {
+            return false;
+        }
+        
         $properBlogName = $this->getInternalBlogName($blogName);
         $seconds = date('s', time());
         $basicNewEntryFileName = $date . $seconds;
         $uniqunessNumber = $this->getNewEntryUniqueNumber($properBlogName, $basicNewEntryFileName);
         $newEntryFileFullName = $basicNewEntryFileName . $uniqunessNumber;
         
+        $sem = sem_get(3);
+        ob_flush();
+        flush();
+        sem_acquire($sem);
+        
         $this->addEmptyFileFD($properBlogName, $newEntryFileFullName);
         $this->saveDataToFileFD($properBlogName, $newEntryFileFullName, array($entryTitle, $entry));
         $this->manageNewEntryUploadedFiles($blogName, $newEntryFileFullName);
+        
+        ob_flush();
+        flush();
+        sem_release($sem);
     }
     
     protected function getNewEntryUniqueNumber($properBlogName, $basicNewEntryDirName) {
@@ -92,5 +105,11 @@ class Entry_model extends Basic_model {
     
     protected function getUploadedFileInfo($fileName) {
         return isset($_FILES[$fileName]) ? $_FILES[$fileName] : null;
+    }
+    
+//    Bad practice, code repetition!!!
+    public function checkIfBlogExist($blogName) {
+        $properBlogName = $this->getInternalBlogName($blogName);
+        return $this->checkIfFileExistsFD('', $properBlogName);
     }
 }
