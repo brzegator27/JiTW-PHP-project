@@ -110,20 +110,20 @@ class Blog_model extends Basic_model {
         $properBlogName = $this->getInternalBlogName($blogName);
         $passwordMD5 = md5($password);
         
-        $sem = sem_get(1);
-        ob_flush();
-        flush();
-        sem_acquire($sem);
+//        $sem = sem_get(1);
+//        ob_flush();
+//        flush();
+//        sem_acquire($sem);
         
         $blogWithNameNotExists = $this->addDirFD('', $properBlogName);
-        if(!$blogWithNameNotExists) {
+        if($blogWithNameNotExists) {
             $this->addEmptyFileFD($properBlogName, 'info');
             $this->saveDataToFileFD($properBlogName, 'info', array($userName, $passwordMD5, $blogDescription));
         }
         
-        ob_flush();
-        flush();
-        sem_release($sem);
+//        ob_flush();
+//        flush();
+//        sem_release($sem);
     }
     
     public function checkIfBlogExist($blogName) {

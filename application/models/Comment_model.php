@@ -5,7 +5,7 @@ require_once realpath(__DIR__ . '/../core/Basic_model.php');
 class Comment_model extends Basic_model {
     
     public function manageNewCommentData($commentType, $nickname, $content, $blogName, $entryId) {
-        if(!$this->checkIfBlogExist($blogName)) {
+        if(!$this->checkIfBlogExist($blogName) || !$this->checkIfEntryExists($blogName, $entryId)) {
             return false;
         }
         
@@ -13,10 +13,10 @@ class Comment_model extends Basic_model {
         $commentDirPath = $blogNameProper . '/' . $entryId . '.k';
         $commentDirExist = $this->checkIfFileExistsFD('', $commentDirPath);
         
-        $sem = sem_get(2);
-        ob_flush();
-        flush();
-        sem_acquire($sem);
+//        $sem = sem_get(2);
+//        ob_flush();
+//        flush();
+//        sem_acquire($sem);
         
         if(!$commentDirExist) {
             $this->addDirFD($blogNameProper, $entryId . '.k');
@@ -28,9 +28,9 @@ class Comment_model extends Basic_model {
         $commentDate = gmdate('Y-m-d h:i:s \G\M\T');
         $this->saveDataToFileFD($commentDirPath, $newCommentNumber, array($commentType, $commentDate, $nickname, $content));
         
-        ob_flush();
-        flush();
-        sem_release($sem);
+//        ob_flush();
+//        flush();
+//        sem_release($sem);
     }
     
     private function getFilesInDirCount($dirPath) {
@@ -43,5 +43,11 @@ class Comment_model extends Basic_model {
     public function checkIfBlogExist($blogName) {
         $properBlogName = $this->getInternalBlogName($blogName);
         return $this->checkIfFileExistsFD('', $properBlogName);
+    }
+    
+//    Bad practice, not proper model!!!
+    public function checkIfEntryExists($blogName, $entryId) {
+        $properBlogName = $this->getInternalBlogName($blogName);
+        return $this->checkIfFileExistsFD($properBlogName, $entryId);
     }
 }

@@ -15,18 +15,18 @@ class Entry_model extends Basic_model {
         $uniqunessNumber = $this->getNewEntryUniqueNumber($properBlogName, $basicNewEntryFileName);
         $newEntryFileFullName = $basicNewEntryFileName . $uniqunessNumber;
         
-        $sem = sem_get(3);
-        ob_flush();
-        flush();
-        sem_acquire($sem);
+//        $sem = sem_get(3);
+//        ob_flush();
+//        flush();
+//        sem_acquire($sem);
         
         $this->addEmptyFileFD($properBlogName, $newEntryFileFullName);
         $this->saveDataToFileFD($properBlogName, $newEntryFileFullName, array($entryTitle, $entry));
         $this->manageNewEntryUploadedFiles($blogName, $newEntryFileFullName);
         
-        ob_flush();
-        flush();
-        sem_release($sem);
+//        ob_flush();
+//        flush();
+//        sem_release($sem);
     }
     
     protected function getNewEntryUniqueNumber($properBlogName, $basicNewEntryDirName) {
