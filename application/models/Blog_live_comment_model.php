@@ -1,22 +1,42 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once '/../core/Basic_model.php';
+require_once realpath(__DIR__ . '/../core/Basic_model.php');
 class Blog_live_comment_model extends Basic_model {
     
-//    public function newComment($author, $content) {
-//        
-//    }
-//    
-//    public function getComments() {
-//        
-//    }
-//    
-//    public function manageCommentsFile() {
-//        
-//    }
+    protected function areThereNewComments($properBlogName, $timestamp) {
+        $liveCommentsFilesRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/lk/*';
+        $liveCommentsFiles = glob($liveCommentsFilesRegExp);
+        
+        foreach($liveCommentsFiles as $filePath) {
+            $filePathArr = explode('/', $filePath);
+            $fileName = $filePathArr[count($filePathArr) - 1];
+            
+//            Integer is too small for timestamp.
+            if(doubleval($fileName) > doubleval($timestamp)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public function getComments($properBlogName, $lastSiteTimestamp) {
+        $leftTime = 800000;
+        $timeIncrement = 50;
+        
+        while($leftTime > 2 * $timeIncrement) {
+            if($this->areThereNewComments($properBlogName, $lastSiteTimestamp)) {
+                break;
+            }
+            usleep($timeIncrement);
+            $leftTime -= $timeIncrement;
+        }
+        
+        return $this->getCommentsData($properBlogName);
+    }
     
-    public function getComments($properBlogName) {
+    protected function getCommentsData($properBlogName) {
         $liveComments = array();
         
         $liveCommentsFilesRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/lk/*';
@@ -54,7 +74,7 @@ class Blog_live_comment_model extends Basic_model {
         $liveCommentDirPath = $blogNameProper . '/lk';
         $liveCommentDirExist = $this->checkIfFileExistsFD('', $liveCommentDirPath);
         
-//        $sem = sem_get(2);
+//        $sem = sem_get(4);
 //        ob_flush();
 //        flush();
 //        sem_acquire($sem);

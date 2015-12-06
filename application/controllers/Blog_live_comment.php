@@ -14,7 +14,7 @@ class Blog_live_comment extends Basic_controller {
         $timestamp = $this->getPostData('timestamp');
         
         if($blogName) {
-            $commentsArr = $this->model->getComments($blogName);
+            $commentsArr = $this->model->getComments($blogName, $timestamp);
             $commentsJSON = json_encode(array('data' => $commentsArr));
             echo $commentsJSON;
         }

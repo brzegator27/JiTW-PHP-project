@@ -29,7 +29,7 @@
     Imię: <input type="text" id="live-comment-username"/><br/>
     Tekst: <textarea id="live-comment-text" cols="40" rows="5"></textarea><br/>
     <button type="button" onclick="manageNewLiveComment(this)" id="live-comment-send-button" disabled>Wyślij</button>
-    <input type="checkbox" onchange="manageLiveCommentState(this)">Komunikator aktywny<br/>
+    <input type="checkbox" onchange="manageLiveCommentState(this)" id="live-comment-checkbox">Komunikator aktywny<br/>
 </div>
 <script>
     var blogName = '<?= $viewData['blog_name'] ?>',

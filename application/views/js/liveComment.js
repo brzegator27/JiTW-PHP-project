@@ -1,4 +1,5 @@
 var liveCommentModuleIsActive = false;
+var highestTimestamp = 0;
 
 generateNewMessageDOMElement = function(commentData, timestamp) {
     var divElement = document.createElement('div'),
@@ -7,7 +8,7 @@ generateNewMessageDOMElement = function(commentData, timestamp) {
             textNode = null,
             linebreak = null;
     
-    divElement.timestamp = timestamp;
+    divElement.timestamp = String(timestamp);
     divElement.appendChild(messageNode);
     
     for(var i = 0; i < splittedText.length; i++) {
@@ -60,6 +61,12 @@ generateCurrentTimestamp = function() {
     );
 };
 
+getLiveCommentCheckboxStatus = function() {
+    var checkbox = document.getElementById('live-comment-checkbox');
+    
+    return checkbox.checked;
+};
+
 manageLiveCommentState = function(checkbox) {
     var checkboxStatus = checkbox.checked,
             sendMessageButton = document.getElementById('live-comment-send-button');
@@ -82,7 +89,20 @@ getLiveCommentMessageData = function() {
     };
 };
 
-sendLiveComment = function(timestamp) {
+updateLiveCommentTimestamp = function(DOMObjToUpdate, newTimestamp) {
+    var oldTimestamp = DOMObjToUpdate.timestamp,
+            liveCommentBox = document.getElementById('live-comment-box');
+    
+    if(String(oldTimestamp) === String(newTimestamp)) {
+        return;
+    }
+    
+    liveCommentBox.removeChild(DOMObjToUpdate);
+    DOMObjToUpdate.timestamp = String(newTimestamp);
+    insertNewComment(DOMObjToUpdate);
+};
+
+sendLiveComment = function(DOMObjToUpdate, timestamp) {
     var http = new XMLHttpRequest(),
             url = liveCommentUrlSend,
             messageData = getLiveCommentMessageData(),
@@ -97,7 +117,7 @@ sendLiveComment = function(timestamp) {
 
     http.onreadystatechange = function() {
         if(http.readyState == 4 && http.status == 200) {
-            console.log(http.responseText);
+            updateLiveCommentTimestamp(DOMObjToUpdate, http.responseText);
         }
     };
     
@@ -106,23 +126,44 @@ sendLiveComment = function(timestamp) {
 
 manageNewLiveComment = function(button) {
     var commentData = getLiveCommentMessageData(),
-            newCommentDOMObj = generateNewMessageDOMElement(commentData, timestamp),
-            timestamp = generateCurrentTimestamp();
+            timestamp = generateCurrentTimestamp(),
+            newCommentDOMObj = generateNewMessageDOMElement(commentData, timestamp);
     
-    sendLiveComment(timestamp);
-    insertNewComment(newCommentDOMObj, timestamp);
+    sendLiveComment(newCommentDOMObj, timestamp);
+    insertNewComment(newCommentDOMObj);
 };
 
-insertNewComment = function(commentObj, timestamp) {
+checkIfCommentAlreadyExists = function(timestamp) {
     var liveCommentBox = document.getElementById('live-comment-box'),
             comments = liveCommentBox.childNodes;
     
     for(var i = 0; i < comments.length; i++) {
-        if(parseInt(comments[i].timestamp) === timestamp && comments[i].nodeName === 'DIV') {
-            break;
+        if(String(comments[i].timestamp) === String(timestamp) && comments[i].nodeName === 'DIV') {
+            return true;
         }
-        if(parseInt(comments[i].timestamp) > timestamp && comments[i].nodeName === 'DIV') {
+    }
+    
+    return false;
+};
+
+updateHighestTimestamp = function(newCommentTimestamp) {
+    if(parseInt(highestTimestamp) < parseInt(newCommentTimestamp)) {
+        highestTimestamp = newCommentTimestamp;
+    }
+};
+
+insertNewComment = function(commentObj) {
+    var liveCommentBox = document.getElementById('live-comment-box'),
+            comments = liveCommentBox.childNodes,
+            timestamp = commentObj.timestamp;
+    
+    if(checkIfCommentAlreadyExists(timestamp)) {
+        return;
+    }
+    for(var i = 0; i < comments.length; i++) {
+        if(parseInt(comments[i].timestamp) > parseInt(timestamp) && comments[i].nodeName === 'DIV') {
             liveCommentBox.insertBefore(commentObj, comments[i]);
+            updateHighestTimestamp(timestamp);
             break;
         }
     }
@@ -134,7 +175,7 @@ pullLiveCommentsFromServer = function() {
             data = new FormData();
     
     data.append('blog_name', blogName);
-//    data.append('timestamp', timestamp);
+    data.append('timestamp', highestTimestamp);
 
     http.open('POST', url, true);
 
@@ -151,8 +192,12 @@ pullLiveCommentsFromServer = function() {
                     text: responseData[i].text
                 }, responseData[i].timestamp);
                 
-                insertNewComment(newCommentDOMObj, responseData[i].timestamp);
+                insertNewComment(newCommentDOMObj);
                 i++;
+            }
+            
+            if(getLiveCommentCheckboxStatus()) {
+                setTimeout(pullLiveCommentsFromServer, 3000);
             }
         }
     };
