@@ -77,5 +77,15 @@ class Basic_model {
         return $blogName;
 //        return str_replace(' ', '-', $blogName);
     }
+    
+    protected function deleteFileFromFD($fileDirPath, $fileName) {
+        if($this->checkIfFileExistsFD($fileDirPath, $fileName)) {
+            $fileFullPath = $this->generatePath($fileDirPath, $fileName);
+            unlink($fileFullPath);
+            return true;
+        }
+        
+        return false;
+    }
 }
 

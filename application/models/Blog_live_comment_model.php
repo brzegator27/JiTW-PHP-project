@@ -4,6 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once realpath(__DIR__ . '/../core/Basic_model.php');
 class Blog_live_comment_model extends Basic_model {
     
+    protected $liveCommentsCountLimit = 300;
+    
     protected function areThereNewComments($properBlogName, $timestamp) {
         $liveCommentsFilesRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/lk/*';
         $liveCommentsFiles = glob($liveCommentsFilesRegExp);
@@ -20,10 +22,23 @@ class Blog_live_comment_model extends Basic_model {
         
         return false;
     }
+    
+    protected function manageLiveCommentsCount($properBlogName) {
+        $liveCommentsFilesRegExp = $this->fakeDatabaseDir . '/' . $properBlogName . '/lk/*';
+        $liveCommentsFiles = glob($liveCommentsFilesRegExp);
+        
+        asort($liveCommentsFiles);
+        
+        for($i = 0; $i < count($liveCommentsFiles) - $this->liveCommentsCountLimit; $i++) {
+            unlink($liveCommentsFiles[$i]);
+        }
+    }
 
     public function getComments($properBlogName, $lastSiteTimestamp) {
         $leftTime = 800000;
         $timeIncrement = 50;
+        
+        $this->manageLiveCommentsCount($properBlogName);
         
         while($leftTime > 2 * $timeIncrement) {
             if($this->areThereNewComments($properBlogName, $lastSiteTimestamp)) {
