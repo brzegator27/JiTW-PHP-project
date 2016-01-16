@@ -122,6 +122,9 @@ sendLiveComment = function(DOMObjToUpdate, timestamp) {
     };
     
     http.send(data);
+    
+    messageData.username = '';
+    messageData.text = '';
 };
 
 manageNewLiveComment = function(button) {

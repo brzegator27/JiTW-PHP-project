@@ -38,7 +38,7 @@
             liveCommentBox = document.getElementById('live-comment-box'),
             comments = liveCommentBox.childNodes;
     
-    comments[1].timestamp = '99999999999999999';
+    comments[1].timestamp = 99999999999999999999;
 </script>
 <!--End of live comment module.-->
 

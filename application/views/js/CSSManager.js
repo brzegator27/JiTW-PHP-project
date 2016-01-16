@@ -78,7 +78,7 @@ manageStylesChange = function(newActiveStyleTitle) {
 };
 
 setStylesCookie = function(newActiveStyleTitle) {
-    document.cookie = 'styles=' + newActiveStyleTitle + ';path=/jitw-php-agh';
+    document.cookie = 'styles=' + newActiveStyleTitle + ';path=/~symfiz/js';
 };
 
 getStylesCookie = function() {

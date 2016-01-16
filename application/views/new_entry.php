@@ -18,7 +18,7 @@
         name="entry_hour"
         onkeyup="onHourFieldUpdate()"
         onblur="onBlur()"/><br/>
-    Plik : <input type="file" name="file_1"><br/>
+    Plik : <input type="file" name="file_1" change="newFileField" id="first-input-file-field"><br/>
     <button type="button" onclick="newFileField(this)" id="new-file-button">Nowy plik</button><br/><br/>
     <input type="hidden" name="date" /><br/>
     <button type="reset" value="Wyczyść">Wyczyść</button><br/>
@@ -29,22 +29,33 @@
 <script>
     var lastFileFieldIndex = 1;
     
-    newFileField = function(button) {
-        var newFileFieldButtonId = 'new-file-button',
+    newFileField = function(event) {
+        var button = document.getElementById("new-file-button"),
+                newFileFieldButtonId = 'new-file-button',
                 newFileFieldName = 'file_' + ++lastFileFieldIndex,
                 form = document.getElementById('entry-form'),
                 newFileFieldButton = document.getElementById(newFileFieldButtonId),
                 fileTextNode = document.createTextNode('Plik : '),
                 newFileField = document.createElement('input'),
-                linebreak = document.createElement('br');
+                linebreak = document.createElement('br'),
+                fileInput = event.target;
+        
+        if(!fileInput.value) {
+            return;
+        }
         
         newFileField.setAttribute('type', 'file');
         newFileField.setAttribute('name', newFileFieldName);
+        
+        newFileField.addEventListener('change', newFileField);
         
         form.insertBefore(fileTextNode, newFileFieldButton);
         form.insertBefore(newFileField, newFileFieldButton);
         form.insertBefore(linebreak, newFileFieldButton);
     };
+    
+    var firstFileInput = document.getElementById("first-input-file-field");
+    firstFileInput.addEventListener('change', newFileField);
     
     setCurrentDate = function() {
         var form = document.getElementById('entry-form'),
@@ -64,7 +75,7 @@
 //    RRRRMMDDGGmmSSUU gdzie: R - rok, M - miesiąc, D - dzień, G - godzina, m - minuta
         var date = new Date(),
             year = date.getYear() + 1900,
-            month = date.getMonth() + 1 < 10 ? '0' + date.getMonth() + 1 : date.getMonth() + 1,
+            month = date.getMonth() + 1 < 10 ? '' + date.getMonth() + 1 : date.getMonth() + 1,
             day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
             hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours(),
             minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
@@ -93,7 +104,7 @@
                 isleapYear = isLeapYear(entryDateFieldYearValue),
                 isYearCorrect = entryDateFieldYearValue > 2000 && entryDateFieldYearValue < 9999,
                 isMonthCorrect = entryDateFieldMonthValue >= 1 && entryDateFieldMonthValue <= 12,
-                isDayCorrect = entryDateFieldDayValue >= 1 && entryDateFieldDayValue <= (isleapYear ? 28 : 29),
+                isDayCorrect = entryDateFieldDayValue >= 1 && entryDateFieldDayValue <= (isleapYear ? 29 : 28),
                 isFieldValueLenghtCorrect = entryDateFieldValueLenght === 10,
                 arePausesInPlace = entryDateFieldValue.substr(4, 1) === '-' && entryDateFieldValue.substr(7, 1) === '-';
 
@@ -108,7 +119,7 @@
                 entryHoureFieldHoursValue = parseInt(entryHourFieldValue.substr(0, 2)),
                 entryHourFieldMinutesValue = parseInt(entryHourFieldValue.substr(3, 2)),
                 areHoursCorrect = entryHoureFieldHoursValue >= 0 && entryHoureFieldHoursValue <= 24,
-                areMinutesCorrect = entryHourFieldMinutesValue >= 0 && entryHourFieldMinutesValue <= 59,
+                areMinutesCorrect = entryHourFieldMinutesValue >= 0 && entryHourFieldMinutesValue <= (entryHoureFieldHoursValue === 24 ? 59 : 0),
                 isFieldValueLenghtCorrect = entryHourFieldValueLenght === 5,
                 isColonInPlace = entryHourFieldValue.substr(2, 1) === ':';
         
