@@ -84,7 +84,8 @@ class Entry_model extends Basic_model {
             }
             
             $collidingFilesNamesRegExp = $filesBasePath . $fileNumber . '.*';
-            if (count(glob($collidingFilesNamesRegExp))) {
+            $collidingFiles = glob($collidingFilesNamesRegExp);
+            if ($collidingFiles && count($collidingFiles)) {
                 error_log('Files collision!');
                 continue;
             }

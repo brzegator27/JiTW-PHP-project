@@ -18,8 +18,8 @@
         name="entry_hour"
         onkeyup="onHourFieldUpdate()"
         onblur="onBlur()"/><br/>
-    Plik : <input type="file" name="file_1" change="newFileField" id="first-input-file-field"><br/>
-    <button type="button" onclick="newFileField(this)" id="new-file-button">Nowy plik</button><br/><br/>
+    Plik : <input type="file" name="file_1" change="addFileField" id="first-input-file-field"><br/>
+    <button type="button" onclick="addFileField(this)" id="new-file-button">Nowy plik</button><br/><br/>
     <input type="hidden" name="date" /><br/>
     <button type="reset" value="Wyczyść">Wyczyść</button><br/>
     <input type="submit" name="submit" value="Wyślij" />
@@ -27,44 +27,58 @@
 
 <script src="../application/views/js/js.js"></script>
 <script>
-    var lastFileFieldIndex = 1;
+    var lastFileFieldIndex = 1,
+        emptyFileInputs = 1;
     
-    newFileField = function(event) {
-        var button = document.getElementById("new-file-button"),
-                newFileFieldButtonId = 'new-file-button',
+    addFileField = function(event) {
+        var newFileFieldButtonId = 'new-file-button',
                 newFileFieldName = 'file_' + ++lastFileFieldIndex,
                 form = document.getElementById('entry-form'),
                 newFileFieldButton = document.getElementById(newFileFieldButtonId),
                 fileTextNode = document.createTextNode('Plik : '),
                 newFileField = document.createElement('input'),
                 linebreak = document.createElement('br'),
-                fileInput = event.target;
+                target = event.target,
+                targetType = target ? target.type : null,
+                targetValue = target ? target.value : null;
         
-        if(!fileInput.value) {
+        if(targetType === 'file' && !targetValue) {
+            var textLabelElement = target.previousSibling,
+                brElement = target.nextSibling;
+            
+            if(emptyFileInputs > 1) {
+                textLabelElement.remove();
+                target.remove();
+                brElement.remove();
+                emptyFileInputs--;
+            }
+            
             return;
         }
         
         newFileField.setAttribute('type', 'file');
         newFileField.setAttribute('name', newFileFieldName);
         
-        newFileField.addEventListener('change', newFileField);
+        newFileField.addEventListener('change', addFileField);
         
         form.insertBefore(fileTextNode, newFileFieldButton);
         form.insertBefore(newFileField, newFileFieldButton);
         form.insertBefore(linebreak, newFileFieldButton);
+        
+        emptyFileInputs++;
     };
     
     var firstFileInput = document.getElementById("first-input-file-field");
-    firstFileInput.addEventListener('change', newFileField);
+    firstFileInput.addEventListener('change', addFileField);
     
     setCurrentDate = function() {
         var form = document.getElementById('entry-form'),
                 entryDateField = form.entry_date,
-                entryHourField = form.entry_hour,
+                entryTimeField = form.entry_hour,
                 dateData = getDateData();
     
         entryDateField.value = dateData.year + '-' + dateData.month + '-' + dateData.day;
-        entryHourField.value = dateData.hours + ':' + dateData.minutes;
+        entryTimeField.value = dateData.hours + ':' + dateData.minutes;
     };
     
     inicializeForm = function() {
@@ -113,15 +127,15 @@
     
     checkHourFieldCorrectness = function() {
         var form = document.getElementById('entry-form'),
-                entryHourField = form.entry_hour,
-                entryHourFieldValue = entryHourField.value,
-                entryHourFieldValueLenght = entryHourFieldValue.length,
-                entryHoureFieldHoursValue = parseInt(entryHourFieldValue.substr(0, 2)),
-                entryHourFieldMinutesValue = parseInt(entryHourFieldValue.substr(3, 2)),
-                areHoursCorrect = entryHoureFieldHoursValue >= 0 && entryHoureFieldHoursValue <= 24,
-                areMinutesCorrect = entryHourFieldMinutesValue >= 0 && entryHourFieldMinutesValue <= (entryHoureFieldHoursValue === 24 ? 59 : 0),
-                isFieldValueLenghtCorrect = entryHourFieldValueLenght === 5,
-                isColonInPlace = entryHourFieldValue.substr(2, 1) === ':';
+                entryTimeField = form.entry_hour,
+                entryTimeFieldValue = entryTimeField.value,
+                entryTimeFieldValueLenght = entryTimeFieldValue.length,
+                entryTimeeFieldHoursValue = parseInt(entryTimeFieldValue.substr(0, 2)),
+                entryTimeFieldMinutesValue = parseInt(entryTimeFieldValue.substr(3, 2)),
+                areHoursCorrect = entryTimeeFieldHoursValue >= 0 && entryTimeeFieldHoursValue <= 24,
+                areMinutesCorrect = entryTimeFieldMinutesValue >= 0 && entryTimeFieldMinutesValue <= (entryTimeeFieldHoursValue === 24 ? 0 : 59),
+                isFieldValueLenghtCorrect = entryTimeFieldValueLenght === 5,
+                isColonInPlace = entryTimeFieldValue.substr(2, 1) === ':';
         
         return areHoursCorrect && areMinutesCorrect && isFieldValueLenghtCorrect && isColonInPlace;
     };
@@ -150,15 +164,15 @@
             entryDateFieldYearValue = entryDateFieldValue.substr(0, 4),
             entryDateFieldMonthValue = entryDateFieldValue.substr(5, 2),
             entryDateFieldDayValue = entryDateFieldValue.substr(8, 2),
-            entryHourField = form.entry_hour,
-            entryHourFieldValue = entryHourField.value,
-            entryHourFieldHoursValue = entryHourFieldValue.substr(0, 2),
-            entryHourFieldMinutesValue = entryHourFieldValue.substr(3, 2),
+            entryTimeField = form.entry_hour,
+            entryTimeFieldValue = entryTimeField.value,
+            entryTimeFieldHoursValue = entryTimeFieldValue.substr(0, 2),
+            entryTimeFieldMinutesValue = entryTimeFieldValue.substr(3, 2),
             hiddenFullDateField = form.date;
     
         entryDateField.disabled = true;
-        entryHourField.disabled = true;
-        hiddenFullDateField.value = '' + entryDateFieldYearValue + entryDateFieldMonthValue + entryDateFieldDayValue + entryHourFieldHoursValue + entryHourFieldMinutesValue;
+        entryTimeField.disabled = true;
+        hiddenFullDateField.value = '' + entryDateFieldYearValue + entryDateFieldMonthValue + entryDateFieldDayValue + entryTimeFieldHoursValue + entryTimeFieldMinutesValue;
     };
     
     onBlur = function() {
