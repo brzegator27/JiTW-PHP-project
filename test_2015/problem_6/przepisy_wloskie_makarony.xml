@@ -6,10 +6,10 @@
         <gatunek_makaronu>
             Jakiś gatunek 1
         </gatunek_makaronu>
-        <skladnik>
+        <skladnik ilosc="12" jednostka="g">
             skl. 1
         </skladnik>
-        <skladnik>
+        <skladnik ilosc="12" jednostka="g">
             skl. 1
         </skladnik>
         <przyprawa>
@@ -20,7 +20,7 @@
         <gatunek_makaronu>
             Jakiś gatunek 1
         </gatunek_makaronu>
-        <skladnik>
+        <skladnik ilosc="12" jednostka="g">
             skl. 1
         </skladnik>
     </wloski_makaron>
