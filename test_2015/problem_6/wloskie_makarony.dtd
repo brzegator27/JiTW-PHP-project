@@ -1,0 +1,10 @@
+<!ELEMENT wloskie_makarony (gatunek_makaronu)*>
+<!ELEMENT wloski_makaron (gatunek_makaronu, skladnik+, przyprawa*)>
+<!ELEMENT gatunek_makaronu (#PCDATA)>
+<!ELEMENT skladnik (#PCDATA)>
+<!ELEMENT przyprawa (#PCDATA)>
+
+<!ATTLIST wloski_makaron indentyfikator ID #REQUIRED>
+<!ATTLIST skladnik ilosc CDATA #REQUIRED>
+<!ATTLIST skladnik jednostka CDATA #REQUIRED>
+

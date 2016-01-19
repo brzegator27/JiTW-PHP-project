@@ -9,18 +9,20 @@ $filePath = generatePath($fileName);
 $file = fopen($filePath, 'w') or die('Unable to open file!');
   
 $date = date('Y-m-d H:i:s');
-$text = $date . "\n";
+$textToSave = $date . "\n";
 
 //  For easy testing I use $_GET instead of $_POST.
 if(count($_GET) === 0) {
     $textToSave .= 'Nie przekazano żadnych parametrów!';
 } else {
-    $postData = '';
+    $postData = array();
+    
+    //  For easy testing I use $_GET instead of $_POST.
     foreach($_GET as $key => $singlePostData) {
-        $postData .= 'Parametr ' . $key . ' ma wartość ' . $singlePostData . "\n";
+        $postData[] = 'Parametr ' . $key . ' ma wartość ' . $singlePostData;
     }
-//  Trimming last new line char.
-    $textToSave = rtrim($postData);
+
+    $textToSave .= implode("\n", $postData);
 }
 
 fwrite($file, $textToSave);

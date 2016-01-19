@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE wloskie_makarony SYSTEM "wloskie_makarony.dtd">
+
+<wloskie_makarony>
+    <wloski_makaron identyfikator="1">
+        <gatunek_makaronu>
+            Jakiś gatunek 1
+        </gatunek_makaronu>
+        <skladnik>
+            skl. 1
+        </skladnik>
+        <skladnik>
+            skl. 1
+        </skladnik>
+        <przyprawa>
+            prz. 1
+        </przyprawa>
+    </wloski_makaron>
+    <wloski_makaron identyfikator="2">
+        <gatunek_makaronu>
+            Jakiś gatunek 1
+        </gatunek_makaronu>
+        <skladnik>
+            skl. 1
+        </skladnik>
+    </wloski_makaron>
+</wloskie_makarony>
