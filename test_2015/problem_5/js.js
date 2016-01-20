@@ -8,7 +8,7 @@ window.onload = function() {
             var el = czerwonyElements[i],
                 elTagName = el.tagName;
 
-            if(elTagName === 'div') {
+            if(elTagName === 'DIV') {
                 el.style.backgroundColor = 'red';
             }
         }
